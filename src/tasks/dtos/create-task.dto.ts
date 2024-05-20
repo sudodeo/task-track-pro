@@ -7,7 +7,7 @@ export class CreateTaskDto {
   @ApiProperty({ example: "Task title", description: "The title of the task" })
   @IsString()
   @MinLength(5)
-  title: string;
+  title!: string;
 
   @ApiProperty({
     example: "Task description",
@@ -15,17 +15,11 @@ export class CreateTaskDto {
   })
   @IsString()
   @MinLength(5)
-  description: string;
+  description!: string;
 
   @ApiProperty({ example: "open", description: "The status of the task" })
   @IsEnum(TaskStatus)
-  status: string;
-
-  constructor(title: string, description: string, status: TaskStatus) {
-    this.title = title;
-    this.description = description;
-    this.status = status;
-  }
+  status!: string;
 }
 
 export const CreateTaskSchema = z.object({

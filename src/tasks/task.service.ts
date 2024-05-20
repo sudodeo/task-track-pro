@@ -56,10 +56,20 @@ export class TaskService {
     updateTaskDto: UpdateTaskDto,
     user: User
   ): Promise<Task> {
-    const task = await this.getTaskById(id, user);
-    Object.assign(task, updateTaskDto);
-    await this.taskRepository.save(task);
-    this.taskGateway.taskUpdated(task);
-    return task;
+    const task = await this.taskRepository.findOne({
+      where: { id, user: { id: user.id } },
+    });
+
+    if (!task) {
+      throw new NotFoundException("Task not found");
+    }
+
+    const updatedTask = this.taskRepository.merge(task, updateTaskDto);
+
+    await this.taskRepository.save(updatedTask);
+
+    this.taskGateway.taskUpdated(updatedTask);
+
+    return updatedTask;
   }
 }

@@ -7,7 +7,7 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
-  username: string;
+  username!: string;
 
   @ApiProperty({
     example: "password123",
@@ -26,12 +26,8 @@ export class CreateUserDto {
   @Matches(/[!@#$%^&*(),.?":{}|<>]/, {
     message: "Password must contain at least one special character",
   })
-  password: string;
+  password!: string;
 
-  constructor(username: string, password: string) {
-    this.username = username;
-    this.password = password;
-  }
 }
 
 export const CreateUserSchema = z.object({
