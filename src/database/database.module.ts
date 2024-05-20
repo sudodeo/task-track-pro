@@ -16,7 +16,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
         synchronize: configService.getOrThrow("NODE_ENV") === "development",
         ssl: {
           rejectUnauthorized: false,
-        }
+        },
       }),
       inject: [ConfigService],
     }),

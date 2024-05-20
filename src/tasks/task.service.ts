@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { z } from "zod";
 import { User } from "../auth/entities/user/user.entity";
 import { CreateTaskDto } from "./dtos/create-task.dto";
 import { UpdateTaskDto } from "./dtos/update-task.dto";
@@ -16,10 +15,7 @@ export class TaskService {
     private taskGateway: TaskGateway
   ) {}
 
-  async createTask(
-    createTaskDto: z.infer<typeof CreateTaskDto>,
-    user: User
-  ): Promise<Task> {
+  async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
     const task = this.taskRepository.create({
       ...createTaskDto,
       user,
@@ -57,7 +53,7 @@ export class TaskService {
 
   async updateTask(
     id: number,
-    updateTaskDto: z.infer<typeof UpdateTaskDto>,
+    updateTaskDto: UpdateTaskDto,
     user: User
   ): Promise<Task> {
     const task = await this.getTaskById(id, user);

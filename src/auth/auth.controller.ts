@@ -1,20 +1,28 @@
 import { BadRequestException, Body, Controller, Post } from "@nestjs/common";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { z } from "zod";
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
-import { CreateUserDto } from "./dtos/create-user.dto";
+import { CreateUserDto, CreateUserSchema } from "./dtos/create-user.dto";
+import { User } from "./entities/user/user.entity";
 
 @Controller("auth")
 @ApiTags("auth")
+@ApiInternalServerErrorResponse({ description: "Internal server error" })
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({ summary: "Register a new user" })
-  @ApiResponse({ status: 201, description: "User registered" })
-  @ApiResponse({ status: 400, description: "Bad request" })
+  @ApiCreatedResponse({ type: User, description: "User registered" })
+  @ApiBadRequestResponse({ description: "Bad request" })
   @Post("register")
-  async register(@Body() body: z.infer<typeof CreateUserDto>) {
-    const result = CreateUserDto.safeParse(body);
+  async register(@Body() body: CreateUserDto) {
+    const result = CreateUserSchema.safeParse(body);
     if (!result.success) {
       throw new BadRequestException(result.error.errors);
     }
@@ -22,11 +30,11 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: "Login" })
-  @ApiResponse({ status: 200, description: "User logged in" })
-  @ApiResponse({ status: 400, description: "Bad request" })
+  @ApiOkResponse({ type: String, description: "User logged in" })
+  @ApiBadRequestResponse({ description: "Bad request" })
   @Post("login")
-  async login(@Body() body: z.infer<typeof CreateUserDto>) {
-    const result = CreateUserDto.safeParse(body);
+  async login(@Body() body: CreateUserDto) {
+    const result = CreateUserSchema.safeParse(body);
     if (!result.success) {
       throw new BadRequestException(result.error.errors);
     }

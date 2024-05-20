@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import * as bcrypt from "bcrypt";
 import { Task } from "src/tasks/entities/task.entity";
 import {
@@ -10,12 +11,15 @@ import {
 
 @Entity("users")
 export class User {
+  @ApiProperty({ description: "The id of the user" })
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty({ description: "The username of the user" })
   @Column({ unique: true })
   username: string;
 
+  @ApiProperty({ description: "The hashed password of the user" })
   @Column()
   password: string;
 
